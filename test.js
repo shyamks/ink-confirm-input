@@ -1,23 +1,13 @@
-import {h, build, renderToString} from 'ink';
+import React from 'react';
 import {spy} from 'sinon';
 import test from 'ava';
+import TextInput from 'ink-text-input';
 import ConfirmInput from '.';
 
 test('render', t => {
-	t.is(renderToString(<ConfirmInput value='Yes'/>), 'Yes');
-});
-
-test('return boolean on submit', t => {
-	const setRef = spy();
 	const onChange = spy();
 	const onSubmit = spy();
-
-	build(<ConfirmInput ref={setRef} onChange={onChange} onSubmit={onSubmit}/>);
-
-	const ref = setRef.firstCall.args[0];
-	ref.handleSubmit('yes');
-
-	t.false(onChange.called);
-	t.true(onSubmit.calledOnce);
-	t.deepEqual(onSubmit.firstCall.args, [true]);
+	const expected = render(<TextInput value='Yes' onChange={onChange}/>);
+	const result = render(<ConfirmInput value='Yes' onChange={onChange} onSubmit={onSubmit}/>);
+	t.is(result.lastFrame(), expected.lastFrame());
 });

@@ -1,50 +1,35 @@
-'use strict';
-const {h, Component} = require('ink');
-const propTypes = require('prop-types');
-const TextInput = require('ink-text-input');
-const yn = require('yn');
+import React from 'react';
+import TextInput from 'ink-text-input';
 
-const noop = () => {};
+import yn from 'yn';
 
-class ConfirmInput extends Component {
+export default class ConfirmInput extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			query: props.value
+		};
+
+		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	handleSubmit(val) {
-		const {checked, onSubmit} = this.props;
-		onSubmit(yn(val, {default: checked}));
+		const { onSubmit } = this.props;
+		onSubmit(yn(val));
 	}
 
 	render() {
-		const {onChange, placeholder, value} = this.props;
-
 		return (
 			<TextInput
-				placeholder={placeholder}
-				value={value}
-				onChange={onChange}
+				value={this.state.query}
+				onChange={this.handleChange}
 				onSubmit={this.handleSubmit}
 			/>
 		);
 	}
+
+	handleChange(query) {
+		this.setState({ query });
+	}
 }
-
-ConfirmInput.propTypes = {
-	checked: propTypes.bool,
-	placeholder: propTypes.string,
-	onChange: propTypes.func,
-	onSubmit: propTypes.func,
-	value: propTypes.string
-};
-
-ConfirmInput.defaultProps = {
-	checked: false,
-	placeholder: '',
-	onChange: noop,
-	onSubmit: noop,
-	value: ''
-};
-
-module.exports = ConfirmInput;
